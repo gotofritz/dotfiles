@@ -1,33 +1,39 @@
-export EDITOR=nano
-
-if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-    color_prompt=yes
-else
-    color_prompt=
-fi
-
-if [ "$color_prompt" = yes ]; then
-    export PS1="\n[\t] \[\e[01;33m\]\u@\H\[\e[0m\]:\$PWD\n"
-    export SUDO_PS1="\n[\t] \[\e[33;01;41m\]\u@\H\[\e[0m\]:\$PWD\n"
-else
-    export PS1="\n[\t] \u@\H:\$PWD\n"
-fi
-
-unset color_prompt
-
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
-
-# for ag
-export LESS=-RFX
-
+# Add `~/bin` to the `$PATH`
 export PATH="$HOME/bin:$PATH"
+
+# Load the shell dotfiles, and then some:
+# * ~/.path can be used to extend `$PATH`.
+# * ~/.extra can be used for other settings you don’t want to commit.
+for file in ~/.{path,bash_prompt,exports,aliases,functions,extra}; do
+    [ -r "$file" ] && [ -f "$file" ] && source "$file"
+done
+unset file
+
+# Case-insensitive globbing (used in pathname expansion)
+shopt -s nocaseglob
+
+# Append to the Bash history file, rather than overwriting it
+shopt -s histappend
+
+# Autocorrect typos in path names when using `cd`
+shopt -s cdspell
+
+# Enable some Bash 4 features when possible:
+# * `autocd`, e.g. `**/qux` will enter `./foo/bar/baz/qux`
+# * Recursive globbing, e.g. `echo **/*.txt`
+for option in autocd globstar; do
+    shopt -s "$option" 2> /dev/null
+done
+
+# Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
+[ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2 | tr ' ' '\n')" scp sftp ssh
+
+# Add tab completion for `defaults read|write NSGlobalDomain`
+# You could just use `-g` instead, but I like being explicit
+complete -W "NSGlobalDomain" defaults
+
+# Add `killall` tab completion for common apps
+complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes SystemUIServer Terminal Twitter" killall
+
+# If possible, add tab completion for many more commands
+[ -f /etc/bash_completion ] && source /etc/bash_completion
