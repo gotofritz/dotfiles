@@ -6,18 +6,38 @@ function installcask() {
 	brew cask install "${@}" 2> /dev/null
 }
 
+installcask adium
+installcask alfred
+installcask anki
+installcask audacity
+installcask audio-hijack-pro
+installcask caffeine
+installcask cyberduck
+installcask disk-inventory-x
+installcask divvy
 installcask dropbox
+installcask evernote
+installcask ffmpegx
+installcask firefox
+installcask font-inconsolata
+installcask gimp
 installcask google-chrome
 installcask google-chrome-canary
+installcask handbrake
 installcask imagealpha
 installcask imageoptim
-installcask iterm2
-installcask macvim
+installcask little-snitch
 installcask miro-video-converter
+installcask mysql-workbench
+installcask namechanger
+installcask node
+installcask omnidisksweeper
+installcask onyx
+installcask opera
+installcask picasa
+installcask skype
 installcask sublime-text
 installcask the-unarchiver
-installcask tor-browser
-installcask transmission
-installcask ukelele
+installcask tinkertool
 installcask virtualbox
 installcask vlc
