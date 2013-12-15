@@ -11,6 +11,8 @@ alias d="cd ~/Documents/Dropbox"
 alias dl="cd ~/Downloads"
 alias dt="cd ~/Desktop"
 alias w="cd ~/work"
+alias dot="cd ~/work/dotfiles/gotofritz/dotfiles; git pull origin master"
+alias o="cd ~/work/octopress; rvm use 1.9.3-p194 --default"
 alias g="git"
 alias h="history"
 
