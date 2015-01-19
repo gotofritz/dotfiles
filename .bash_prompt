@@ -81,7 +81,7 @@ History="\!"
 User="\u"
 Home="\h"
 
-export PS1="$NewLine$Cyan$History $IBlack$Time24 $Cyan$User@$Home$Color_Off"'$(git branch &>/dev/null;\
+export PS1="$NewLine$IBlack[\$(date \"+%a %d-%m %H:%M:%S\")] $Cyan$User@$Home$Color_Off"'$(git branch &>/dev/null;\
 if [ $? -eq 0 ]; then \
   echo "$(echo `git status` | grep "nothing to commit" > /dev/null 2>&1; \
   if [ "$?" -eq "0" ]; then \
@@ -95,4 +95,4 @@ else \
   # @2 - Prompt when not in GIT repo
   echo " '$Yellow$PathShort$Color_Off'\$ "; \
 fi)'$NewLine
-export SUDO_PS1="\n[\t] \[\e[33;01;41m\]\u@\H\[\e[0m\]:\$PWD\n"
+export SUDO_PS1="\n[\$(date \"+%a %d-%m %H:%M:%S\")] \[\e[33;01;41m\]\u@\H\[\e[0m\]:\$PWD\n"
