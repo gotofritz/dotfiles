@@ -1,3 +1,8 @@
+# git stash + pull
+function gpull() {
+	git stash save && git pull && git stash pop
+}
+
 # Simple calculator
 function calc() {
 	local result=""
