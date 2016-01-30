@@ -1,2 +1,5 @@
 # list of files not to be included when running alias backupext
-*/.Trash
+*.Trash*
+.TemporaryItems*
+.DocumentRevisions-*
+.Spotlight-*
