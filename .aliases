@@ -149,7 +149,7 @@ alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resource
 alias reload="exec $SHELL -l"
 
 # backs up external hard disk
-	alias backupext="rsync -aSv  --progress /Users/fritz/Dropbox/backups/iTunes\ Library.itl /Volumes/WD2T/ITUNES_LIBRARIES/ && rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list trsync -aSv  --progress /Users/fritz/Dropbox/backups/iTunes\ Library.itl /Volumes/WD2T/ITUNES_LIBRARIES/ &&  /Volumes/WD2T/ /Volumes/WDMAC/"
+alias backupext="rsync -aSv  --progress /Users/fritz/Dropbox/backups/iTunes\ Library.itl /Volumes/WD2T/ITUNES_LIBRARIES/ && rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/ /Volumes/WDMAC/"
 
 # Faster npm for europeans
 command -v npm > /dev/null && alias npme="npm --registry http://registry.npmjs.eu"
