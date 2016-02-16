@@ -1,0 +1,13 @@
+# scripts I use for backups
+
+# backs up external hard disk
+alias backupext="rsync -aSv  --progress /Users/fritz/Music/iTunes/iTunes\ Library.itl /Volumes/WD2T/ITUNES_LIBRARIES/ && rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/ /Volumes/WDMAC/"
+
+# backup music libraries
+alias musicsafe="cp ~/Music/iTunes/iTunes\ Library.itl ~/Music/iTunes/iTunes\ Library\ copy.itl && cp ~/Dropbox/backups/iTunes\ Library.itl ~/Dropbox/backups/iTunes\ Library\ copy.itl"
+alias music_now_home="musicsafe && cp ~/Dropbox/backups/iTunes\ Library.itl ~/Music/iTunes/iTunes\ Library.itl"
+alias music_for_office="musicsafe && cp  ~/Music/iTunes/iTunes\ Library.itl ~/Dropbox/backups/iTunes\ Library.itl"
+
+alias backupbin="rsync -aSv --delete --progress --exclude=subl --exclude=.DS_Store ~/bin/ ~/Dropbox/backups/bin/"
+
+alias backup=backupbin
