@@ -316,3 +316,17 @@ function tabname {
 function winname {
   printf "\e]2;$1\a"
 }
+
+function git-sync {
+  # Checks name of current branch
+	repo=`git rev-parse --abbrev-ref HEAD`
+	# If this is a fork, there must be an 'original' (in git jargon an 'upstream') somewhere.
+	# This assumes the git upstream was set with `git remote add upstream git@xxxx`
+	# And that the master is used to sync with upstream, with everyone working on branches
+	git checkout master && git pull origin master && git fetch upstream &&  git merge upstream/master && git push origin master
+	# If you were in a branch, go back to it, and merge what you have just fetched
+	if [ '$repo' != 'master' ]; then
+			git checkout $repo && git merge origin master && git push origin $repo
+	fi
+	git status
+}
