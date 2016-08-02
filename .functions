@@ -312,6 +312,11 @@ function tabname {
   printf "\e]1;$1\a"
 }
 
+# changes the name of the Terminal tab to that of the current dir
+function tabnamedir {
+	printf "\e]1;%s\a" ${PWD##*/}
+}
+
 # changes the name of the Terminal window
 function winname {
   printf "\e]2;$1\a"
