@@ -335,3 +335,10 @@ function git-sync {
 	fi
 	git status
 }
+
+# usage
+# pb-path node_modules/this/that.js
+# it copies the path into che clipboard without trailing newline
+function pb-path {
+	ls $1 | tr -d "\n" | pbcopy
+}
