@@ -41,3 +41,7 @@ complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes Syste
 # Set up rbenv for Homebrew. Make sure path is BEFORE Homebrew's /usr/local/[s]bin
 #To enable shims and autocompletion add to your profile:
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
+# nvm
+export NVM_DIR="/Users/fstelluto/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
