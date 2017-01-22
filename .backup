@@ -1,7 +1,26 @@
 # scripts I use for backups
 
 # backs up external hard disk
-alias backupext="rsync -aSv  --progress /Users/fritz/Music/iTunes/iTunes\ Library.itl /Volumes/WD2T/ITUNES_LIBRARIES/ && rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/ /Volumes/WDMAC/ && rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list ~/Google\ Drive/* /Volumes/WDMAC/GOOGLE\ DRIVE && rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list ~/Dropbox/* /Volumes/WDMAC/DROPBOX"
+# a = archive mode, the same as :
+#   r = recursive
+#   l = links
+#   p = preserve permission
+#   t = preserve times
+#   g = preserve group
+#   o = preserve owner
+#   D = special files + device files
+# S = sparse files
+function backupext() {
+  rsync -aSv  --progress /Users/fritz/Music/iTunes/iTunes\ Library.itl /Volumes/WD2T/ITUNES_LIBRARIES/
+  rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/ITUNES_LIBRARIES/ /Volumes/WDMAC/ITUNES_LIBRARIES/
+  rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/MUSIC/ /Volumes/WDMAC/MUSIC/
+  rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/PHOTO/ /Volumes/WDMAC/PHOTO/
+  rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/TEK/ /Volumes/WDMAC/TEK/
+  rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/VIDEO/ /Volumes/WDMAC/VIDEO/
+  rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/WAREZ/ /Volumes/WDMAC/WAREZ/
+  rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Users/fritz/Google\ Drive/ /Volumes/WDMAC/BACKUP/GOOGLE_DRIVE/
+  rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Users/fritz/Dropbox/ /Volumes/WDMAC/BACKUP/DROPBOX/
+}
 
 # backup music libraries
 alias musicsafe="cp ~/Music/iTunes/iTunes\ Library.itl ~/Music/iTunes/iTunes\ Library\ copy.itl && cp ~/Dropbox/backups/iTunes\ Library.itl ~/Dropbox/backups/iTunes\ Library\ copy.itl"
