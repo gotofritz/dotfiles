@@ -45,3 +45,22 @@ if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 # nvm
 export NVM_DIR="/Users/fstelluto/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+# from https://github.com/lalitkapoor/nvm-auto-switch/blob/master/nvm-auto-switch.sh
+nvm_auto_switch() {
+  local NVM_RC_FILE
+  local DEFAULT_VERSION
+  local NVM_VERSION
+  NVM_RC_FILE=`nvm_find_nvmrc`
+
+  if [ "$NVM_RC_FILE"  == "" ]; then
+    DEFAULT_VERSION="$(nvm_alias default 2>/dev/null || echo)"
+    NVM_VERSION="$(nvm_version $DEFAULT_VERSION)"
+  else
+    NVM_VERSION=`cat $NVM_RC_FILE`
+  fi
+
+  [ "$(nvm_version_path $NVM_VERSION)/bin" == "$NVM_BIN" ] || nvm use "$NVM_VERSION"
+}
+
+cd() { builtin cd "$@"; nvm_auto_switch; }
