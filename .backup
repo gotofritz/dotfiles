@@ -28,6 +28,8 @@ alias music_now_home="musicsafe && cp ~/Dropbox/backups/iTunes\ Library.itl ~/Mu
 alias music_for_office="musicsafe && cp  ~/Music/iTunes/iTunes\ Library.itl ~/Dropbox/backups/iTunes\ Library.itl"
 alias music_status="echo 'LAST CHANGED:' && date -r ~/Music/iTunes/iTunes\ Library\ copy.itl"
 
-alias backupbin="rsync -aSv --delete --progress --exclude=subl --exclude=.DS_Store ~/bin/ ~/Dropbox/backups/bin/"
+alias backupbin='rsync -aSv --progress --exclude "subl" --exclude "node_modules/" --copy-links --exclude ".DS_Store" ~/bin/ ~/Dropbox/backups/bin/'
 
-alias backup=backupbin
+alias backup="backupbin && backupext"
+
+
