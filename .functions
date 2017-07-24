@@ -342,3 +342,14 @@ function git-sync {
 function pb-path {
 	ls $1 | tr -d "\n" | pbcopy
 }
+
+# when I put an USB stick in my telly I can see all the pointless .folders
+function clean_stick {
+	export stick=${1-DONT_FORGET_STICK_NAME}
+	rm -rf /Volumes/$stick/.Spotlight-V100
+	rm -rf /Volumes/$stick/.TemporaryItems
+	rm -rf /Volumes/$stick/.Trashes
+	rm -rf /Volumes/$stick/.fseventsd
+	find /Volumes/$stick/ -name "._*" -delete
+	la /Volumes/$stick
+}
