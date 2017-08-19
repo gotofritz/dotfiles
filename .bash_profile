@@ -42,10 +42,6 @@ complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes Syste
 #To enable shims and autocompletion add to your profile:
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
-# nvm
-export NVM_DIR="/Users/fstelluto/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-
 # from https://github.com/lalitkapoor/nvm-auto-switch/blob/master/nvm-auto-switch.sh
 nvm_auto_switch() {
   local NVM_RC_FILE
