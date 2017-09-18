@@ -47,16 +47,18 @@ nvm_auto_switch() {
   local NVM_RC_FILE
   local DEFAULT_VERSION
   local NVM_VERSION
-  NVM_RC_FILE=`nvm_find_nvmrc`
 
-  if [ "$NVM_RC_FILE"  == "" ]; then
-    DEFAULT_VERSION="$(nvm_alias default 2>/dev/null || echo)"
-    NVM_VERSION="$(nvm_version $DEFAULT_VERSION)"
-  else
-    NVM_VERSION=`cat $NVM_RC_FILE`
+  if [ -e "$NVM_DIR" ]; then
+    NVM_RC_FILE=`nvm_find_nvmrc`
+    if [ "$NVM_RC_FILE"  == "" ]; then
+      DEFAULT_VERSION="$(nvm_alias default 2>/dev/null || echo)"
+      NVM_VERSION="$(nvm_version $DEFAULT_VERSION)"
+    else
+      NVM_VERSION=`cat $NVM_RC_FILE`
+    fi
+
+    [ "$(nvm_version_path $NVM_VERSION)/bin" == "$NVM_BIN" ] || nvm use "$NVM_VERSION"
   fi
-
-  [ "$(nvm_version_path $NVM_VERSION)/bin" == "$NVM_BIN" ] || nvm use "$NVM_VERSION"
 }
 
 cd() { builtin cd "$@"; nvm_auto_switch; }
