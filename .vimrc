@@ -15,3 +15,6 @@ set ruler
 
 " show (partial) commands
 set showcmd
+
+" text width for github
+set tw=72
