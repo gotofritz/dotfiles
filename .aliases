@@ -154,3 +154,6 @@ command -v npm > /dev/null && alias npme="npm --registry http://registry.npmjs.e
 
 # compact git log with time
 alias glog='git log --format=format:"%C(cyan)%h %C(yellow)%<(14,trunc)%cn %C(red)%<(21,trunc)%ci %Creset%s"'
+
+# git shortcuts
+alias gs='git status'
