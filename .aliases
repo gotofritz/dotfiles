@@ -157,3 +157,5 @@ alias glog='git log --format=format:"%C(cyan)%h %C(yellow)%<(14,trunc)%cn %C(red
 
 # git shortcuts
 alias gs='git status'
+alias gc='git commit -a'
+alias ga='git add .'
