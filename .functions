@@ -353,3 +353,8 @@ function clean_stick {
 	find /Volumes/$stick/ -name "._*" -delete
 	la /Volumes/$stick
 }
+
+# code insider
+function code {
+	/Applications/Visual\ Studio\ Code\ -\ Insiders.app/Contents/MacOS/Electron $1
+}
