@@ -354,7 +354,7 @@ function clean_stick {
 	la /Volumes/$stick
 }
 
-# code insider
+# code inside
 function code {
-	/Applications/Visual\ Studio\ Code\ -\ Insiders.app/Contents/MacOS/Electron $1
+	/Applications/Visual\ Studio\ Code\ -\ Insiders.app/Contents/MacOS/Electron "$@"
 }
