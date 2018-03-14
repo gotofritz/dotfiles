@@ -13,6 +13,7 @@
 function backupext() {
   rsync -aSv  --progress /Users/fritz/Music/iTunes/iTunes\ Library.itl /Volumes/WD2T/ITUNES_LIBRARIES/
   rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/CALIBRE/ /Volumes/WDMAC/CALIBRE/
+  rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/BACKUP/STORIES /Volumes/WDMAC/BACKUP/STORIES
   rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/ITUNES_LIBRARIES/ /Volumes/WDMAC/ITUNES_LIBRARIES/
   rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/MUSIC/ /Volumes/WDMAC/MUSIC/
   rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/PHOTO/ /Volumes/WDMAC/PHOTO/
