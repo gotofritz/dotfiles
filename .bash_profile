@@ -60,5 +60,6 @@ nvm_auto_switch() {
     [ "$(nvm_version_path $NVM_VERSION)/bin" == "$NVM_BIN" ] || nvm use "$NVM_VERSION"
   fi
 }
+nvm use
 
 cd() { builtin cd "$@"; nvm_auto_switch; }

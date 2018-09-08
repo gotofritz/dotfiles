@@ -4,3 +4,9 @@
 .DocumentRevisions-*
 .Spotlight-*
 .DS_Store
+
+# these are for ~/bin
+subl
+HandBrakeCLI
+PDFconcat
+XLD
