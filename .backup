@@ -22,7 +22,6 @@ function backupext() {
   rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/WAREZ/ /Volumes/WDMAC/WAREZ/
   rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Users/fritz/Google\ Drive/ /Volumes/WDMAC/BACKUP/GOOGLE_DRIVE/
   rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Users/fritz/Dropbox/ /Volumes/WDMAC/BACKUP/DROPBOX/
-  mkdir -p /Volumes/WDMAC/EVERNOTE
   rsync -aS --delete --progress --exclude-from ~/.rsync_exclude_list /Volumes/WD2T/EVERNOTE/ /Volumes/WDMAC/EVERNOTE/
 }
 
