@@ -63,3 +63,5 @@ nvm_auto_switch() {
 nvm use
 
 cd() { builtin cd "$@"; nvm_auto_switch; }
+eval "$(pyenv init -)"
+
