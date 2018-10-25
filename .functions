@@ -358,3 +358,24 @@ function clean_stick {
 function code {
 	/Applications/Visual\ Studio\ Code\ -\ Insiders.app/Contents/MacOS/Electron "$@"
 }
+
+# opens a blank brwoser session
+function ff {
+	DIR="$HOME/.cache"
+	mkdir -p -- "$DIR"
+	TEMP="$(mktemp -d -- "$DIR/firefox-XXXXXX")"
+	trap "rm -rf -- '$TEMP'" INT TERM EXIT
+	/Applications/Firefox.app/Contents/MacOS/firefox -profile "$TEMP" -no-remote "$@"
+}
+
+# opens a blank brwoser session
+function chr {
+	DIR="$HOME/.cache"
+	mkdir -p -- "$DIR"
+	TEMP="$(mktemp -d -- "$DIR/chrome-XXXXXX")"
+	trap "rm -rf -- '$TEMP'" INT TERM EXIT
+	/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --user-data-dir="$TEMP" \
+         --no-default-browser-check \
+         --no-first-run \
+         "$@" >/dev/null 2>&1
+}
