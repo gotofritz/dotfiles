@@ -57,10 +57,12 @@ nvm_auto_switch() {
       NVM_VERSION=`cat $NVM_RC_FILE`
     fi
 
-    [ "$(nvm_version_path $NVM_VERSION)/bin" == "$NVM_BIN" ] || nvm use "$NVM_VERSION"
+    if [[ $NVM_VERSION != "N/A" ]]; then
+      [ "$(nvm_version_path $NVM_VERSION)/bin" == "$NVM_BIN" ] || nvm use "$NVM_VERSION"
+    fi
   fi
 }
-nvm use
+nvm_auto_switch
 
 cd() { builtin cd "$@"; nvm_auto_switch; }
 eval "$(pyenv init -)"
