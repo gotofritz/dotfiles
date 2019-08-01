@@ -359,7 +359,7 @@ function code {
 	/Applications/Visual\ Studio\ Code\ -\ Insiders.app/Contents/MacOS/Electron "$@"
 }
 
-# opens a blank brwoser session
+# opens a blank browser session
 function ff {
 	DIR="$HOME/.cache"
 	mkdir -p -- "$DIR"
@@ -368,7 +368,7 @@ function ff {
 	/Applications/Firefox.app/Contents/MacOS/firefox -profile "$TEMP" -no-remote "$@"
 }
 
-# opens a blank brwoser session
+# opens a blank browser session
 function chr {
 	DIR="$HOME/.cache"
 	mkdir -p -- "$DIR"
@@ -379,3 +379,6 @@ function chr {
          --no-first-run \
          "$@" >/dev/null 2>&1
 }
+
+# Git log find by commit message
+function glf() { git log --all --grep="$1"; }
