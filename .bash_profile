@@ -65,5 +65,5 @@ nvm_auto_switch() {
 nvm_auto_switch
 
 cd() { builtin cd "$@"; nvm_auto_switch; }
-eval "$(pyenv init -)"
+if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 
