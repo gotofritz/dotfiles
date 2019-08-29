@@ -382,3 +382,21 @@ function chr {
 
 # Git log find by commit message
 function glf() { git log --all --grep="$1"; }
+
+# creates a sequence of directories in the form PATH001 DIR
+function dirseq() {
+	if [ $# -eq 0 ]; then
+    echo "Usage: dirseq PATH UP_TO DIR"
+		return 1
+	fi
+	path=$1
+	upto=${2:-10}
+	if [[ -z $3 ]]; then
+			dir=''
+	else
+			dir=" $3"
+	fi
+	for i in $(seq -w 1 $upto); do
+		mkdir "$path/$i$dir"
+	done;
+}

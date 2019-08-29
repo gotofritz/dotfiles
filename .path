@@ -5,5 +5,8 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 
-export PATH="$HOME/bin:/usr/local/bin:$(brew --prefix coreutils)/libexec/gnubin:$PATH"
+PATH_EXTRAS="$HOME/bin:/usr/local/bin:$(brew --prefix coreutils)/libexec/gnubin"
+if [[ -d /usr/local/opt/libpq ]]; then PATH_EXTRAS="$PATH_EXTRAS:/usr/local/opt/libpq/bin"; fi
+
+export PATH="$PATH_EXTRAS:$PATH"
 
