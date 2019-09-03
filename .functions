@@ -250,33 +250,6 @@ function unquarantine() {
 	done
 }
 
-# Install Grunt plugins and add them as `devDependencies` to `package.json`
-# Usage: `gi contrib-watch contrib-uglify zopfli`
-function gi() {
-	local IFS=,
-	eval npm install --save-dev grunt-{"$*"}
-}
-
-# `s` with no arguments opens the current directory in Sublime Text, otherwise
-# opens the given location
-function s() {
-	if [ $# -eq 0 ]; then
-		subl .
-	else
-		subl "$@"
-	fi
-}
-
-# `v` with no arguments opens the current directory in Vim, otherwise opens the
-# given location
-function v() {
-	if [ $# -eq 0 ]; then
-		vim .
-	else
-		vim "$@"
-	fi
-}
-
 # `o` with no arguments opens current directory, otherwise opens the given
 # location
 function o() {
@@ -399,4 +372,13 @@ function dirseq() {
 	for i in $(seq -w 1 $upto); do
 		mkdir "$path/$i$dir"
 	done;
+}
+
+function port() {
+	if [ $# -eq 0 ]; then
+    echo "Usage: port PATH UP_TO DIR"
+		return 1
+	fi
+	PORT=$1
+	lsof -nP -i4TCP:$PORT | grep LISTEN
 }
