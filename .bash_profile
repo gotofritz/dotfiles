@@ -14,6 +14,17 @@ shopt -s nocaseglob
 
 # Append to the Bash history file, rather than overwriting it
 shopt -s histappend
+# timestamps for later analysis. www.debian-administration.org/users/rossen/weblog/1
+export HISTTIMEFORMAT='%F %T '
+# keep history up to date, across sessions, in realtime
+#  http://unix.stackexchange.com/a/48113
+#   - ignorespace = don't save lines that begin with a space
+#   - ignoredups  = don't save duplicate lines
+#   - erasedups   = erase across sessions
+export HISTCONTROL=ignorespace:ignoredups:erasedups
+# big big history (default is 500)
+export HISTSIZE=100000
+export HISTFILESIZE=$HISTSIZE
 
 # Autocorrect typos in path names when using `cd`
 shopt -s cdspell
