@@ -193,3 +193,5 @@ alias gstl='git stash list'
 alias gstp='git stash pop'
 alias gsts='git stash save'
 alias gstc='git stash clear'
+
+alias backgyaz='tar cvzf ~/Dropbox/backups/GyazMail.tar.gz  ~/Library/Application\ Support/GyazMail ~/Library/Preferences/jp.gyazsquare.GyazMail.plist'
