@@ -195,3 +195,4 @@ alias gsts='git stash save'
 alias gstc='git stash clear'
 
 alias backgyaz='tar cvzf ~/Dropbox/backups/GyazMail.tar.gz  ~/Library/Application\ Support/GyazMail ~/Library/Preferences/jp.gyazsquare.GyazMail.plist'
+alias nr='npm run'
