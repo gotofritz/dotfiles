@@ -50,31 +50,8 @@ complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes Syste
 [ -f /etc/bash_completion ] && source /etc/bash_completion
 
 # Set up rbenv for Homebrew. Make sure path is BEFORE Homebrew's /usr/local/[s]bin
-#To enable shims and autocompletion add to your profile:
+# To enable shims and autocompletion add to your profile:
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
-# from https://github.com/lalitkapoor/nvm-auto-switch/blob/master/nvm-auto-switch.sh
-nvm_auto_switch() {
-  local NVM_RC_FILE
-  local DEFAULT_VERSION
-  local NVM_VERSION
-
-  if [ -e "$NVM_DIR" ]; then
-    NVM_RC_FILE=`nvm_find_nvmrc`
-    if [ "$NVM_RC_FILE"  == "" ]; then
-      DEFAULT_VERSION="$(nvm_alias default 2>/dev/null || echo)"
-      NVM_VERSION="$(nvm_version $DEFAULT_VERSION)"
-    else
-      NVM_VERSION=`cat $NVM_RC_FILE`
-    fi
-
-    if [[ $NVM_VERSION != "N/A" ]]; then
-      [ "$(nvm_version_path $NVM_VERSION)/bin" == "$NVM_BIN" ] || nvm use "$NVM_VERSION"
-    fi
-  fi
-}
-nvm_auto_switch
-
-cd() { builtin cd "$@"; nvm_auto_switch; }
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 
