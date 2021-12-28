@@ -5,8 +5,23 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 
-PATH_EXTRAS="$HOME/bin:$(pyenv root)/shims:/usr/local/bin:/usr/local/sbin:/opt/homebrew/bin"
+# there are better ways of doing this...but this works for me for nowech
+PATH_EXTRAS=""
+FRAGMENT="$HOME/bin"
+[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
+FRAGMENT="$(pyenv root)/shims"
+[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
+FRAGMENT="$HOME/.local/bin"
+[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
+FRAGMENT="/usr/local/bin"
+[[ ! $PATH =~ "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
+FRAGMENT="/usr/local/sbin"
+[[ ! $PATH =~ "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
+FRAGMENT="/opt/homebrew/bin"
+[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
 # this fixes an issue I had with ffmpeg - may no longer be needed, one day I will double check...
-if [[ -d /usr/local/opt/libpq ]]; then PATH_EXTRAS="$PATH_EXTRAS:/usr/local/opt/libpq/bin"; fi
+FRAGMENT="/usr/local/opt/libpq"
+[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
 
-export PATH="$PATH_EXTRAS:$PATH"
+
+[[ ! -z "$PATH_EXTRAS" ]] && export PATH="${PATH_EXTRAS:1}:$PATH"
