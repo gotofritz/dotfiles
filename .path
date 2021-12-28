@@ -5,8 +5,8 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 
-PATH_EXTRAS="$HOME/bin:/usr/local/bin:/usr/local/sbin:/opt/homebrew/bin"
+PATH_EXTRAS="$HOME/bin:$(pyenv root)/shims:/usr/local/bin:/usr/local/sbin:/opt/homebrew/bin"
+# this fixes an issue I had with ffmpeg - may no longer be needed, one day I will double check...
 if [[ -d /usr/local/opt/libpq ]]; then PATH_EXTRAS="$PATH_EXTRAS:/usr/local/opt/libpq/bin"; fi
 
 export PATH="$PATH_EXTRAS:$PATH"
-
