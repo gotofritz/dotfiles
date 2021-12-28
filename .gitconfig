@@ -88,3 +88,8 @@
 
 [push]
 	default = simple
+[user]
+	name = gotofritz
+	email = info@gotofritz.net
+[init]
+	defaultBranch = main
