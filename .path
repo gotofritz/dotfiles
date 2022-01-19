@@ -5,10 +5,6 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init --path)"
   eval "$(pyenv init -)"
 fi
-if [[ ! -z "$(pip list | grep -F powerline-status)" ]]; then
-  powerline="$(pip show --disable-pip-version-check powerline-status | grep Location | cut -d " " -f 2)"
-  eval ". $powerline/powerline/bindings/bash/powerline.sh"
-fi
 
 # there are better ways of doing this...but this works for me for nowech
 PATH_EXTRAS=""
