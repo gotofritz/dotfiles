@@ -9,6 +9,9 @@ for file in ~/.{path,git-prompt.sh,bash_prompt,exports,aliases,functions,extra,b
 done
 unset file
 
+# Suppressing "The default interactive shell is now zsh" message
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
 # Case-insensitive globbing (used in pathname expansion)
 shopt -s nocaseglob
 
