@@ -14,6 +14,11 @@ FRAGMENT="$(pyenv root)/shims"
 [[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
 FRAGMENT="$HOME/.local/bin"
 [[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
+
+# GNU make is 4.3, OS X default is 3.8 which is decades old
+FRAGMENT="/usr/local/opt/make/libexec/gnubin"
+[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
+
 FRAGMENT="/usr/local/bin"
 [[ ! $PATH =~ "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
 FRAGMENT="/usr/local/sbin"
