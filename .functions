@@ -7,14 +7,14 @@ function gpull() {
 function calc() {
 	local result=""
 	result="$(printf "scale=10;$*\n" | bc --mathlib | tr -d '\\\n')"
-	#                       └─ default (when `--mathlib` is used) is 20
+	#											 └─ default (when `--mathlib` is used) is 20
 	#
 	if [[ "$result" == *.* ]]; then
 		# improve the output for decimal numbers
 		printf "$result" |
-		sed -e 's/^\./0./'        `# add "0" for cases like ".5"` \
-		    -e 's/^-\./-0./'      `# add "0" for cases like "-.5"`\
-		    -e 's/0*$//;s/\.$//'   # remove trailing zeros
+		sed -e 's/^\./0./'				`# add "0" for cases like ".5"` \
+				-e 's/^-\./-0./'			`# add "0" for cases like "-.5"`\
+				-e 's/0*$//;s/\.$//'	 # remove trailing zeros
 	else
 		printf "$result"
 	fi
@@ -273,7 +273,7 @@ function tre() {
 
 # changes the name of the Terminal tab
 function tabname {
-  printf "\e]1;$1\a"
+	printf "\e]1;$1\a"
 }
 
 # changes the name of the Terminal tab to that of the current dir
@@ -283,16 +283,16 @@ function tabnamedir {
 
 # changes the name of the Terminal window
 function winname {
-  printf "\e]2;$1\a"
+	printf "\e]2;$1\a"
 }
 
 function git-sync {
-  # Checks name of current branch
+	# Checks name of current branch
 	repo=`git rev-parse --abbrev-ref HEAD`
 	# If this is a fork, there must be an 'original' (in git jargon an 'upstream') somewhere.
 	# This assumes the git upstream was set with `git remote add upstream git@xxxx`
 	# And that the master is used to sync with upstream, with everyone working on branches
-	git checkout master && git pull origin master && git fetch upstream &&  git merge upstream/master && git push origin master
+	git checkout master && git pull origin master && git fetch upstream &&	git merge upstream/master && git push origin master
 	# If you were in a branch, go back to it, and merge what you have just fetched
 	if [ '$repo' != 'master' ]; then
 			git checkout $repo && git merge origin master && git push origin $repo
@@ -310,11 +310,14 @@ function pb-path {
 # when I put an USB stick in my telly I can see all the pointless .folders
 function clean_stick {
 	stick=${1:?usage: $0 stick_name}
-	rm -rf /Volumes/$stick/.Spotlight-V100
 	rm -rf /Volumes/$stick/.TemporaryItems
-	rm -rf /Volumes/$stick/.Trashes
 	rm -rf /Volumes/$stick/.fseventsd
+	sudo mdutil -i off /Volumes/$stick
+	sudo mdutil -E /Volumes/$stick
+	sudo mdutil -X /Volumes/$stick
+	sudo rm -rf /Volumes/$stick/.Trashes
 	find /Volumes/$stick/ -name "._*" -delete
+  mount
 	la /Volumes/$stick
 	hdiutil unmount /Volumes/$stick
 	la /Volumes/
@@ -341,9 +344,9 @@ function chr {
 	TEMP="$(mktemp -d -- "$DIR/chrome-XXXXXX")"
 	trap "rm -rf -- '$TEMP'" INT TERM EXIT
 	/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --user-data-dir="$TEMP" \
-         --no-default-browser-check \
-         --no-first-run \
-         "$@" >/dev/null 2>&1
+				 --no-default-browser-check \
+				 --no-first-run \
+				 "$@" >/dev/null 2>&1
 }
 
 # Git log find by commit message
@@ -352,7 +355,7 @@ function glf() { git log --all --grep="$1"; }
 # creates a sequence of directories in the form PATH001 DIR
 function dirseq() {
 	if [ $# -eq 0 ]; then
-    echo "Usage: dirseq PATH UP_TO DIR"
+		echo "Usage: dirseq PATH UP_TO DIR"
 		return 1
 	fi
 	path=$1
@@ -369,7 +372,7 @@ function dirseq() {
 
 function port() {
 	if [ $# -eq 0 ]; then
-    echo "Usage: port PATH UP_TO DIR"
+		echo "Usage: port PATH UP_TO DIR"
 		return 1
 	fi
 	PORT=$1
