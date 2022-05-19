@@ -6,6 +6,8 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 
+export PNPM_HOME="/Users/fritz/Library/pnpm"
+
 # there are better ways of doing this...but this works for me for nowech
 PATH_EXTRAS=""
 FRAGMENT="$HOME/bin"
@@ -28,6 +30,7 @@ FRAGMENT="/opt/homebrew/bin"
 # this fixes an issue I had with ffmpeg - may no longer be needed, one day I will double check...
 FRAGMENT="/usr/local/opt/libpq"
 [[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
-
+FRAGMENT=$PNPM_HOME
+[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
 
 [[ ! -z "$PATH_EXTRAS" ]] && export PATH="${PATH_EXTRAS:1}:$PATH"
