@@ -198,7 +198,7 @@ alias gstc='git stash clear'
 alias nr='npm run'
 
 # misc
-alias kindle='open https://read.amazon.com/notebook'
+alias kindle='open https://read.amazon.de/notebook'
 
 # python
 alias ae='source venv/bin/activate'
