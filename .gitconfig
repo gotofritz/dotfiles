@@ -34,10 +34,6 @@
 	# Remove branches that have already been merged with master
 	dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
 
-[apply]
-	# Detect whitespace errors when applying a patch
-	whitespace = ignore
-
 [core]
 	# Use custom `.gitignore` and `.gitattributes`
 	excludesfile = ~/.gitignore
@@ -92,5 +88,5 @@
 	defaultBranch = main
 [pull]
 	rebase = false
-[rerere]  
+[rerere]
 	enabled = true
