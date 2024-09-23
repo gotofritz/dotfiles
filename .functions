@@ -378,3 +378,37 @@ function port() {
 	PORT=$1
 	lsof -nP -i4TCP:$PORT | grep LISTEN
 }
+
+# if you have a branch named `feature-1` it will rename it to `feature-2`
+# Use case: you already have closed a PR and you want to keep the branch name
+function branch_bump {
+  current_branch=$(git branch --show-current)
+
+  if [ -n "$1" ]; then
+    if [[ "$current_branch" =~ ^(.+)-([0-9]+)$ ]]; then
+      base_branch="${BASH_REMATCH[1]}"
+    else
+      base_branch="$current_branch"
+    fi
+    new_suffix="$1"
+    new_branch="$base_branch-$new_suffix"
+  else
+    if [[ $current_branch =~ ^(.+)-([0-9]+)$ ]]; then
+      base_branch="${BASH_REMATCH[1]}"
+      current_suffix="${BASH_REMATCH[2]}"
+      new_suffix=$((current_suffix + 1))
+    else
+      base_branch="$current_branch"
+      new_suffix=2
+    fi
+    new_branch="$base_branch-$new_suffix"
+  fi
+
+  git branch -m "$new_branch"
+
+  git push origin :"$current_branch" "$new_branch"
+
+  git push --set-upstream origin "$new_branch"
+
+  echo "Branch renamed to $new_branch and pushed to remote."
+}
