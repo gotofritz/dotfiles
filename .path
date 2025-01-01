@@ -33,4 +33,8 @@ FRAGMENT="/usr/local/sbin"
 FRAGMENT=$PNPM_HOME
 [[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
 
+FRAGMENT="/Users/fritz/work/flutter"
+[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
+
+
 [[ ! -z "$PATH_EXTRAS" ]] && export PATH="${PATH_EXTRAS:1}:$PATH"
