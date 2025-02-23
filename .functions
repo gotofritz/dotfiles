@@ -283,7 +283,7 @@ function tabnamedir {
 
 # changes the name of the Terminal window
 function winname {
-	printf "\e]2;$1\a"
+	echo -ne "\033]0;$1\007"
 }
 
 function git-sync {
