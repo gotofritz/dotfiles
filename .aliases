@@ -198,4 +198,4 @@ alias nr='npm run'
 alias kindle='open https://read.amazon.de/notebook'
 
 # python
-alias ae='source venv/bin/activate'
+alias ae='source .venv/bin/activate'
