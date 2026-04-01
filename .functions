@@ -323,11 +323,6 @@ function clean_stick {
 	la /Volumes/
 }
 
-# code inside
-function code {
-	/Applications/Visual\ Studio\ Code\ -\ Insiders.app/Contents/MacOS/Electron "$@"
-}
-
 # opens a blank browser session
 function ff {
 	DIR="$HOME/.cache"
