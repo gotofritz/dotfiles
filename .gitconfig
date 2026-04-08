@@ -90,3 +90,6 @@
 	rebase = false
 [rerere]
 	enabled = true
+
+[includeIf "gitdir:~/work/gotofritz/"]
+  path = ~/.gitconfig-gotofritz

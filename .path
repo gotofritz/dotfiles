@@ -38,3 +38,8 @@ FRAGMENT="/Users/fritz/work/flutter/bin"
 
 
 [[ ! -z "$PATH_EXTRAS" ]] && export PATH="${PATH_EXTRAS:1}:$PATH"
+
+
+export XDG_CONFIG_HOME="$HOME/.config"
+
+export STARSHIP_CONFIG="$HOME/Dropbox/_TRANSFER/starship.toml"

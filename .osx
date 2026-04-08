@@ -190,7 +190,6 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 # enables key-repeating
 # https://github.com/VSCodeVim/Vim#mac
 defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
-defaults write com.microsoft.VSCodeInsiders ApplePressAndHoldEnabled -bool false
 
 # Disable press-and-hold for keys in favor of key repeat
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
