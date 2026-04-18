@@ -43,3 +43,8 @@ FRAGMENT="/Users/fritz/work/flutter/bin"
 export XDG_CONFIG_HOME="$HOME/.config"
 
 export STARSHIP_CONFIG="$HOME/Dropbox/_TRANSFER/starship.toml"
+
+
+# This loads nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
