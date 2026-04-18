@@ -1,19 +1,8 @@
-# Set up rbenv for Homebrew. Make sure path is BEFORE Homebrew's /usr/local/[s]bin
-# To enable shims and autocompletion add to your profile:
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init --path)"
-  eval "$(pyenv init -)"
-fi
-
-
 export PNPM_HOME="/Users/fritz/Library/pnpm"
 
 # there are better ways of doing this...but this works for me for nowech
 PATH_EXTRAS=""
 FRAGMENT="$HOME/bin"
-[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
-FRAGMENT="$(pyenv root)/shims"
 [[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
 FRAGMENT="$HOME/.local/bin"
 [[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
@@ -48,3 +37,11 @@ export STARSHIP_CONFIG="$HOME/Dropbox/_TRANSFER/starship.toml"
 # This loads nvm
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+# Set up rbenv for Homebrew. Make sure path is BEFORE Homebrew's /usr/local/[s]bin
+# To enable shims and autocompletion add to your profile:
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init --path)"
+  eval "$(pyenv init -)"
+fi
