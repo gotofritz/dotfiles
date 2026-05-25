@@ -3,6 +3,13 @@ function gpull() {
 	git stash save && git pull && git stash pop
 }
 
+function roborevbranch() {
+	before=$(git rev-parse HEAD)
+	git pull
+	after=$(git rev-parse HEAD)
+	[ "$before" != "$after" ] && roborev review --branch --wait
+}
+
 # Simple calculator
 function calc() {
 	local result=""
