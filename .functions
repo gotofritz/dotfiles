@@ -1,3 +1,7 @@
+function gbd() {
+	git branch -D "$1" && git push origin --delete "$1"
+}
+
 # git stash + pull
 function gpull() {
 	git stash save && git pull && git stash pop

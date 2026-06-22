@@ -158,7 +158,6 @@ alias gaa='git add .'
 alias gaaa='git add --all'
 alias gau='git add --update'
 alias gb='git branch'
-alias gbd='git branch --delete '
 alias gc='git commit'
 alias gca='git commit -a'
 alias gcf='git commit --fixup'
@@ -191,8 +190,7 @@ alias gstp='git stash pop'
 alias gsts='git stash save'
 alias gstc='git stash clear'
 alias gsqb='GIT_SEQUENCE_EDITOR="sed -i -e ''1!s/pick/fixup/''" git rebase -i $(git merge-base HEAD main)'
-
-alias nr='npm run'
+alias gv="gh pr view --web"
 
 # misc
 alias kindle='open https://read.amazon.de/notebook'
