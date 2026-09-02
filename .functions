@@ -1,3 +1,45 @@
+# git worktree add — must be run from a folder named "main"
+# usage: gwa [branch-name]  (omit to pick with fzf)
+function gwa() {
+	if [[ "$(basename "$PWD")" != "main" ]]; then
+		echo "gwa: must be run from a directory named 'main'" >&2
+		return 1
+	fi
+	if ! git rev-parse --git-dir &>/dev/null; then
+		echo "gwa: not a git repo" >&2
+		return 1
+	fi
+
+	local branch
+	if [[ -n "${1:-}" ]]; then
+		branch="$1"
+	else
+		branch=$(git branch -a \
+			| sed 's|^\*\? *||; s|remotes/origin/||' \
+			| sort -u \
+			| fzf --prompt="branch: ")
+		[[ -z "$branch" ]] && return 1
+	fi
+
+	local sanitized
+	sanitized=$(printf '%s' "$branch" | tr '/' '-')
+
+	git worktree add "../$sanitized" "$branch" || return 1
+	cd "../$sanitized"
+}
+
+# git worktree clean — removes all worktrees except main, then cd into main
+function gwc() {
+	[[ "$(basename "$PWD")" == "main" ]] && cd ..
+
+	git -C main worktree list --porcelain \
+		| awk '/^worktree / && !/\/main$/ { print $2 }' \
+		| xargs -I{} git -C main worktree remove --force {}
+
+	git -C main worktree prune
+	cd main
+}
+
 function gbd() {
 	git branch -D "$1" && git push origin --delete "$1"
 }
