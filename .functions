@@ -24,7 +24,17 @@ function gwa() {
 	local sanitized
 	sanitized=$(printf '%s' "$branch" | tr '/' '-')
 
-	git worktree add "../$sanitized" "$branch" || return 1
+	local local_exists remote_exists
+	local_exists=$(git branch --list "$branch")
+	remote_exists=$(git branch -r --list "origin/$branch")
+
+	if [[ -z "$local_exists" && -z "$remote_exists" ]]; then
+		read -r -p "Branch '$branch' not found locally or on remote. Create it? [y/N] " reply
+		[[ "$reply" =~ ^[Yy]$ ]] || return 1
+		git worktree add -b "$branch" "../$sanitized" || return 1
+	else
+		git worktree add "../$sanitized" "$branch" || return 1
+	fi
 	cd "../$sanitized"
 }
 
