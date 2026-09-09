@@ -40,14 +40,31 @@ function gwa() {
 
 # git worktree clean — removes all worktrees except main, then cd into main
 function gwc() {
-	[[ "$(basename "$PWD")" == "main" ]] && cd ..
+	local main_path
 
-	git -C main worktree list --porcelain \
-		| awk '/^worktree / && !/\/main$/ { print $2 }' \
-		| xargs -I{} git -C main worktree remove --force {}
+	# Inside any worktree: git works directly
+	if git rev-parse --git-dir &>/dev/null; then
+		main_path=$(git worktree list --porcelain \
+			| awk '/^worktree / { wt=$2 } /^branch refs\/heads\/main$/ { print wt; exit }')
+	fi
 
-	git -C main worktree prune
-	cd main
+	# Fallback: called from parent dir with main/ subdir
+	if [[ -z "$main_path" ]] && [[ -d main ]]; then
+		main_path=$(git -C main worktree list --porcelain \
+			| awk '/^worktree / { wt=$2 } /^branch refs\/heads\/main$/ { print wt; exit }')
+	fi
+
+	if [[ -z "$main_path" ]]; then
+		echo "gwc: no 'main' worktree found"
+		return 1
+	fi
+
+	git -C "$main_path" worktree list --porcelain \
+		| awk -v m="$main_path" '/^worktree / && $2 != m { print $2 }' \
+		| xargs -I{} git -C "$main_path" worktree remove --force {}
+
+	git -C "$main_path" worktree prune
+	cd "$main_path"
 }
 
 function gbd() {
