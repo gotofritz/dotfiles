@@ -19,9 +19,6 @@ FRAGMENT="/usr/local/bin"
 [[ ! $PATH =~ "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
 FRAGMENT="/usr/local/sbin"
 [[ ! $PATH =~ "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
-FRAGMENT=$PNPM_HOME
-[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
-
 FRAGMENT="/Users/fritz/work/flutter/bin"
 [[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
 
