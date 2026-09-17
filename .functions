@@ -456,6 +456,21 @@ function port() {
 
 # if you have a branch named `feature-1` it will rename it to `feature-2`
 # Use case: you already have closed a PR and you want to keep the branch name
+# Convert string to URL-friendly slug
+# Usage: slugify "Hello World! Foo" → hello-world-foo
+function slugify() {
+	python3 -c "
+import unicodedata, re, sys
+text = ' '.join(sys.argv[1:])
+text = unicodedata.normalize('NFD', text)
+text = ''.join(c for c in text if unicodedata.category(c) != 'Mn')
+text = text.lower()
+text = re.sub(r'[^a-z0-9]+', '-', text)
+text = text.strip('-')
+print(text)
+" "$@"
+}
+
 function branch_bump {
   current_branch=$(git branch --show-current)
 
