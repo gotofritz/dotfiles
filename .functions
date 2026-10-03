@@ -456,6 +456,17 @@ function port() {
 
 # if you have a branch named `feature-1` it will rename it to `feature-2`
 # Use case: you already have closed a PR and you want to keep the branch name
+# Create a timestamped git branch with optional prefix (default: fix)
+# Usage: newbranch [prefix]
+function newbranch() {
+	local prefix="${1:-fix}"
+	if [[ ! "$prefix" =~ ^[a-zA-Z0-9-]+$ ]]; then
+		echo "newbranch: prefix must match [a-zA-Z0-9-]" >&2
+		return 1
+	fi
+	git checkout -b "${prefix}-$(date "+%Y-%m-%dT%H%M")-$(jot -w %04d -r 1 1 100)"
+}
+
 # Convert string to URL-friendly slug
 # Usage: slugify "Hello World! Foo" → hello-world-foo
 function slugify() {
