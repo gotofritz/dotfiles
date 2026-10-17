@@ -191,7 +191,8 @@ alias gsts='git stash save'
 alias gstc='git stash clear'
 alias gsqb='GIT_SEQUENCE_EDITOR="sed -i -e ''1!s/pick/fixup/''" git rebase -i $(git merge-base HEAD main)'
 alias gv="gh pr view --web"
-alias gw="gh repo view -w"
+alias gw="gh repo view --web"
+alias gmain="gco main && gb | grep -wv main | xargs git branch -D && git fetch -p && git rebase origin/main"
 
 # misc
 alias kindle='open https://read.amazon.de/notebook'
