@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 
-# ~/.osx — http://mths.be/osx
+# setup-mac.sh — one-off setup for a new Mac. Run it by hand: ./setup-mac.sh
+# Based on http://mths.be/osx
+
+###############################################################################
+# Starship prompt                                                             #
+###############################################################################
+
+if ! command -v starship > /dev/null; then
+  brew install starship
+fi
+mkdir -p ~/.config
+[ -e ~/.config/starship.toml ] || ln -s ~/Dropbox/_TRANSFER/starship.toml ~/.config/
 
 ###############################################################################
 # General UI/UX                                                               #
