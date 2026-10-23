@@ -96,60 +96,9 @@ function roborevbranch() {
 	[ "$before" != "$after" ] && roborev review --branch --wait
 }
 
-# Simple calculator
-function calc() {
-	local result=""
-	result="$(printf "scale=10;$*\n" | bc --mathlib | tr -d '\\\n')"
-	#											 └─ default (when `--mathlib` is used) is 20
-	#
-	if [[ "$result" == *.* ]]; then
-		# improve the output for decimal numbers
-		printf "$result" |
-		sed -e 's/^\./0./'				`# add "0" for cases like ".5"` \
-				-e 's/^-\./-0./'			`# add "0" for cases like "-.5"`\
-				-e 's/0*$//;s/\.$//'	 # remove trailing zeros
-	else
-		printf "$result"
-	fi
-	printf "\n"
-}
-
 # Create a new directory and enter it
 function mkd() {
 	mkdir -p "$@" && cd "$@"
-}
-
-# Change working directory to the top-most Finder window location
-function cdf() { # short for `cdfinder`
-	cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
-}
-
-# Create a .tar.gz archive, using `zopfli`, `pigz` or `gzip` for compression
-function targz() {
-	local tmpFile="${@%/}.tar"
-	tar -cvf "${tmpFile}" --exclude=".DS_Store" "${@}" || return 1
-
-	size=$(
-		stat -f"%z" "${tmpFile}" 2> /dev/null; # OS X `stat`
-		stat -c"%s" "${tmpFile}" 2> /dev/null # GNU `stat`
-	)
-
-	local cmd=""
-	if (( size < 52428800 )) && hash zopfli 2> /dev/null; then
-		# the .tar file is smaller than 50 MB and Zopfli is available; use it
-		cmd="zopfli"
-	else
-		if hash pigz 2> /dev/null; then
-			cmd="pigz"
-		else
-			cmd="gzip"
-		fi
-	fi
-
-	echo "Compressing .tar using \`${cmd}\`…"
-	"${cmd}" -v "${tmpFile}" || return 1
-	[ -f "${tmpFile}" ] && rm "${tmpFile}"
-	echo "${tmpFile}.gz created successfully."
 }
 
 # Determine size of a file or total size of a directory
@@ -165,14 +114,6 @@ function fs() {
 		du $arg .[^.]* *
 	fi
 }
-
-# Use Git’s colored diff when available
-hash git &>/dev/null
-if [ $? -eq 0 ]; then
-	function diff() {
-		git diff --no-index --color-words "$@"
-	}
-fi
 
 # Create a data URL from a file
 function dataurl() {
@@ -211,113 +152,6 @@ function json() {
 	fi
 }
 
-# All the dig info
-function digga() {
-	dig +nocmd "$1" any +multiline +noall +answer
-}
-
-# Escape UTF-8 characters into their 3-byte format
-function escape() {
-	printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u)
-	# print a newline unless we’re piping the output to another program
-	if [ -t 1 ]; then
-		echo # newline
-	fi
-}
-
-# Decode \x{ABCD}-style Unicode escape sequences
-function unidecode() {
-	perl -e "binmode(STDOUT, ':utf8'); print \"$@\""
-	# print a newline unless we’re piping the output to another program
-	if [ -t 1 ]; then
-		echo # newline
-	fi
-}
-
-# Get a character’s Unicode code point
-function codepoint() {
-	perl -e "use utf8; print sprintf('U+%04X', ord(\"$@\"))"
-	# print a newline unless we’re piping the output to another program
-	if [ -t 1 ]; then
-		echo # newline
-	fi
-}
-
-# Show all the names (CNs and SANs) listed in the SSL certificate
-# for a given domain
-function getcertnames() {
-	if [ -z "${1}" ]; then
-		echo "ERROR: No domain specified."
-		return 1
-	fi
-
-	local domain="${1}"
-	echo "Testing ${domain}…"
-	echo # newline
-
-	local tmp=$(echo -e "GET / HTTP/1.0\nEOT" \
-		| openssl s_client -connect "${domain}:443" 2>&1);
-
-	if [[ "${tmp}" = *"-----BEGIN CERTIFICATE-----"* ]]; then
-		local certText=$(echo "${tmp}" \
-			| openssl x509 -text -certopt "no_header, no_serial, no_version, \
-			no_signame, no_validity, no_issuer, no_pubkey, no_sigdump, no_aux");
-			echo "Common Name:"
-			echo # newline
-			echo "${certText}" | grep "Subject:" | sed -e "s/^.*CN=//";
-			echo # newline
-			echo "Subject Alternative Name(s):"
-			echo # newline
-			echo "${certText}" | grep -A 1 "Subject Alternative Name:" \
-				| sed -e "2s/DNS://g" -e "s/ //g" | tr "," "\n" | tail -n +2
-			return 0
-	else
-		echo "ERROR: Certificate not found.";
-		return 1
-	fi
-}
-
-# Add note to Notes.app (OS X 10.8)
-# Usage: `note 'title' 'body'` or `echo 'body' | note`
-# Title is optional
-function note() {
-	local title
-	local body
-	if [ -t 0 ]; then
-		title="$1"
-		body="$2"
-	else
-		title=$(cat)
-	fi
-	osascript >/dev/null <<EOF
-tell application "Notes"
-	tell account "iCloud"
-		tell folder "Notes"
-			make new note with properties {name:"$title", body:"$title" & "<br><br>" & "$body"}
-		end tell
-	end tell
-end tell
-EOF
-}
-
-# Add reminder to Reminders.app (OS X 10.8)
-# Usage: `remind 'foo'` or `echo 'foo' | remind`
-function remind() {
-	local text
-	if [ -t 0 ]; then
-		text="$1" # argument
-	else
-		text=$(cat) # pipe
-	fi
-	osascript >/dev/null <<EOF
-tell application "Reminders"
-	tell the default list
-		make new reminder with properties {name:"$text"}
-	end tell
-end tell
-EOF
-}
-
 # Manually remove a downloaded app or file from the quarantine
 function unquarantine() {
 	for attribute in com.apple.metadata:kMDItemDownloadedDate com.apple.metadata:kMDItemWhereFroms com.apple.quarantine; do
@@ -333,18 +167,6 @@ function o() {
 	else
 		open "$@"
 	fi
-}
-
-# `np` with an optional argument `patch`/`minor`/`major`/`<version>`
-# defaults to `patch`
-function np() {
-	git pull --rebase && \
-	npm install && \
-	npm test && \
-	npm version ${1:=patch} && \
-	npm publish && \
-	git push origin master && \
-	git push origin master --tags
 }
 
 # `tre` is a shorthand for `tree` with hidden files and color enabled, ignoring
@@ -370,41 +192,11 @@ function winname {
 	echo -ne "\033]0;$1\007"
 }
 
-function git-sync {
-	# Checks name of current branch
-	repo=`git rev-parse --abbrev-ref HEAD`
-	# If this is a fork, there must be an 'original' (in git jargon an 'upstream') somewhere.
-	# This assumes the git upstream was set with `git remote add upstream git@xxxx`
-	# And that the master is used to sync with upstream, with everyone working on branches
-	git checkout master && git pull origin master && git fetch upstream &&	git merge upstream/master && git push origin master
-	# If you were in a branch, go back to it, and merge what you have just fetched
-	if [ '$repo' != 'master' ]; then
-			git checkout $repo && git merge origin master && git push origin $repo
-	fi
-	git status
-}
-
 # usage
 # pb-path node_modules/this/that.js
 # it copies the path into che clipboard without trailing newline
 function pb-path {
 	ls $1 | tr -d "\n" | pbcopy
-}
-
-# when I put an USB stick in my telly I can see all the pointless .folders
-function clean_stick {
-	stick=${1:?usage: $0 stick_name}
-	rm -rf /Volumes/$stick/.TemporaryItems
-	rm -rf /Volumes/$stick/.fseventsd
-	sudo mdutil -i off /Volumes/$stick
-	sudo mdutil -E /Volumes/$stick
-	sudo mdutil -X /Volumes/$stick
-	sudo rm -rf /Volumes/$stick/.Trashes
-	find /Volumes/$stick/ -name "._*" -delete
-  mount
-	la /Volumes/$stick
-	hdiutil unmount /Volumes/$stick
-	la /Volumes/
 }
 
 # opens a blank browser session
@@ -416,38 +208,8 @@ function ff {
 	/Applications/Firefox.app/Contents/MacOS/firefox -profile "$TEMP" -no-remote "$@"
 }
 
-# opens a blank browser session
-function chr {
-	DIR="$HOME/.cache"
-	mkdir -p -- "$DIR"
-	TEMP="$(mktemp -d -- "$DIR/chrome-XXXXXX")"
-	trap "rm -rf -- '$TEMP'" INT TERM EXIT
-	/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --user-data-dir="$TEMP" \
-				 --no-default-browser-check \
-				 --no-first-run \
-				 "$@" >/dev/null 2>&1
-}
-
 # Git log find by commit message
 function glf() { git log --all --grep="$1"; }
-
-# creates a sequence of directories in the form PATH001 DIR
-function dirseq() {
-	if [ $# -eq 0 ]; then
-		echo "Usage: dirseq PATH UP_TO DIR"
-		return 1
-	fi
-	path=$1
-	upto=${2:-10}
-	if [[ -z $3 ]]; then
-			dir=''
-	else
-			dir=" $3"
-	fi
-	for i in $(seq -w 1 $upto); do
-		mkdir "$path/$i$dir"
-	done;
-}
 
 function port() {
 	if [ $# -eq 0 ]; then
