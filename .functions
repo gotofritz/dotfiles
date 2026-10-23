@@ -76,6 +76,19 @@ function gpull() {
 	git stash save && git pull && git stash pop
 }
 
+# switch to main, delete all other local branches, fetch and rebase on origin/main
+# usage: gmain [branch-name]  (if given, check out that branch afterwards)
+function gmain() {
+	git checkout main \
+		&& git branch | grep -wv main | xargs git branch -D \
+		&& git fetch -p \
+		&& git rebase origin/main \
+		|| return 1
+	if [[ -n "${1:-}" ]]; then
+		git checkout "$1"
+	fi
+}
+
 function roborevbranch() {
 	before=$(git rev-parse HEAD)
 	git pull
