@@ -1,44 +1,38 @@
-export PNPM_HOME="/Users/fritz/Library/pnpm"
+# Homebrew: sets PATH, MANPATH, INFOPATH and HOMEBREW_PREFIX.
+# Apple Silicon installs to /opt/homebrew, Intel to /usr/local.
+for brew in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+  if [ -x "$brew" ]; then
+    eval "$("$brew" shellenv)"
+    break
+  fi
+done
+unset brew
 
-# there are better ways of doing this...but this works for me for nowech
-PATH_EXTRAS=""
-FRAGMENT="$HOME/bin"
-[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
-FRAGMENT="$HOME/.local/bin"
-[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
+# Prepend a directory to PATH if it exists and isn't already there
+path_prepend() {
+  [ -d "$1" ] || return
+  case ":$PATH:" in
+    *":$1:"*) ;;
+    *) PATH="$1:$PATH" ;;
+  esac
+}
 
-# GNU make is 4.3, OS X default is 3.8 which is decades old
-FRAGMENT="/usr/local/opt/make/libexec/gnubin"
-[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
-
-FRAGMENT="/opt/homebrew/bin"
-[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
-FRAGMENT="/opt/homebrew/sbin"
-[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
-FRAGMENT="/usr/local/bin"
-[[ ! $PATH =~ "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
-FRAGMENT="/usr/local/sbin"
-[[ ! $PATH =~ "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
-FRAGMENT="/Users/fritz/work/flutter/bin"
-[[ ! $PATH =~ "$FRAGMENT" && -d "$FRAGMENT" ]] && PATH_EXTRAS="$PATH_EXTRAS:$FRAGMENT"
-
-
-[[ ! -z "$PATH_EXTRAS" ]] && export PATH="${PATH_EXTRAS:1}:$PATH"
-
+# GNU make (macOS ships 3.81 from 2006)
+[ -n "$HOMEBREW_PREFIX" ] && path_prepend "$HOMEBREW_PREFIX/opt/make/libexec/gnubin"
+export PNPM_HOME="$HOME/Library/pnpm"
+path_prepend "$PNPM_HOME"
+path_prepend "$HOME/work/flutter/bin"
+# Your own scripts, and tools installed by uv / pipx, win over everything else
+path_prepend "$HOME/.local/bin"
+path_prepend "$HOME/bin"
+export PATH
+unset -f path_prepend
 
 export XDG_CONFIG_HOME="$HOME/.config"
-
 export STARSHIP_CONFIG="$HOME/Dropbox/_TRANSFER/starship.toml"
 
-
-# This loads nvm
+# Version managers, each only if installed
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-
-# Set up rbenv for Homebrew. Make sure path is BEFORE Homebrew's /usr/local/[s]bin
-# To enable shims and autocompletion add to your profile:
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init --path)"
-  eval "$(pyenv init -)"
-fi
+command -v rbenv > /dev/null && eval "$(rbenv init - bash)"
+command -v pyenv > /dev/null && eval "$(pyenv init - bash)"

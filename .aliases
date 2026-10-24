@@ -42,6 +42,9 @@ export LSCOLORS='gxfxcxdxbxegedabagacad'
 # Enable aliases to be sudo'ed
 alias sudo='sudo '
 
+# Always colour grep output
+alias grep='grep --color=auto'
+
 # Get week number
 alias week='date +%V'
 
