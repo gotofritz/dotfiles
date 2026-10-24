@@ -192,13 +192,6 @@ function winname {
 	echo -ne "\033]0;$1\007"
 }
 
-# usage
-# pb-path node_modules/this/that.js
-# it copies the path into che clipboard without trailing newline
-function pb-path {
-	ls $1 | tr -d "\n" | pbcopy
-}
-
 # opens a blank browser session
 function ff {
 	DIR="$HOME/.cache"
