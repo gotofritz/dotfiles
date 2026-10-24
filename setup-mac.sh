@@ -4,12 +4,21 @@
 # Based on http://mths.be/osx
 
 ###############################################################################
+# Homebrew and packages                                                       #
+###############################################################################
+
+if ! command -v brew > /dev/null; then
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  for brew in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+    [ -x "$brew" ] && eval "$("$brew" shellenv)" && break
+  done
+fi
+brew bundle --file="$(dirname "${BASH_SOURCE[0]}")/Brewfile"
+
+###############################################################################
 # Starship prompt                                                             #
 ###############################################################################
 
-if ! command -v starship > /dev/null; then
-  brew install starship
-fi
 mkdir -p ~/.config
 [ -e ~/.config/starship.toml ] || ln -s ~/Dropbox/_TRANSFER/starship.toml ~/.config/
 
