@@ -1,6 +1,26 @@
 #!/usr/bin/env bash
 
-# ~/.osx — http://mths.be/osx
+# setup-mac.sh — one-off setup for a new Mac. Run it by hand: ./setup-mac.sh
+# Based on http://mths.be/osx
+
+###############################################################################
+# Homebrew and packages                                                       #
+###############################################################################
+
+if ! command -v brew > /dev/null; then
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  for brew in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+    [ -x "$brew" ] && eval "$("$brew" shellenv)" && break
+  done
+fi
+brew bundle --file="$(dirname "${BASH_SOURCE[0]}")/Brewfile"
+
+###############################################################################
+# Starship prompt                                                             #
+###############################################################################
+
+mkdir -p ~/.config
+[ -e ~/.config/starship.toml ] || ln -s ~/Dropbox/_TRANSFER/starship.toml ~/.config/
 
 ###############################################################################
 # General UI/UX                                                               #
