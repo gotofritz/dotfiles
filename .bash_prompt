@@ -1,7 +1,2 @@
-if  ! which starship > /dev/null ; then
-  eval "brew install starship"
-  ln -s ~/Dropbox/_TRANSFER/starship.toml ~/.config/
-fi
-
-eval "$(starship init bash) >/dev/null"
-
+# starship is installed by setup-mac.sh
+command -v starship > /dev/null && eval "$(starship init bash)"
