@@ -11,6 +11,8 @@ brew "helix"             # $EDITOR
 # Command-line tools
 brew "fd"                # Modern find
 brew "gh"                # GitHub CLI, used by gv / gw
+brew "go-task"           # Taskfile runner (`task`)
+brew "mas"               # Mac App Store CLI
 brew "git-filter-repo"   # Rewrite git history
 brew "httpie"            # HTTP client
 brew "jq"                # JSON processor
@@ -26,12 +28,14 @@ brew "postgresql@17"     # PostgreSQL server and psql
 
 # Other languages and dev tools
 brew "cmake"             # C/C++ build system
+brew "go"                # Go compiler
 brew "golangci-lint"     # Go linter
 brew "rust"              # Rust compiler
 brew "llama.cpp"         # Run local LLMs
 brew "hashicorp/tap/terraform"
 
 # Web
+brew "nvm"               # Node version manager, loaded by .path
 brew "htmlq"             # jq for HTML
 brew "hugo"              # Static site generator
 
@@ -39,3 +43,25 @@ brew "hugo"              # Static site generator
 brew "ffmpeg"
 brew "pdftk-java"        # Merge / split PDFs
 brew "sox"               # Audio conversion
+brew "yt-dlp"            # Video downloader (maintained youtube-dl fork)
+
+# Apps
+cask "appcleaner"
+cask "bruno"             # API client
+cask "claude-code"
+cask "docker"
+cask "google-drive"
+cask "grandperspective"  # Disk usage map
+cask "handbrake"
+cask "iterm2"
+cask "libreoffice"
+cask "miniconda"
+cask "motrix"            # Download manager
+cask "rocket"            # Emoji picker
+cask "spotify"
+cask "tablepro"
+cask "vlc"
+cask "zoom"
+
+# Fonts
+cask "font-fira-code"

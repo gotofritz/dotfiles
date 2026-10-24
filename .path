@@ -33,6 +33,12 @@ export STARSHIP_CONFIG="$HOME/Dropbox/_TRANSFER/starship.toml"
 
 # Version managers, each only if installed
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+# nvm from Homebrew, or a manual install in ~/.nvm
+if [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]; then
+  mkdir -p "$NVM_DIR"
+  . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
+elif [ -s "$NVM_DIR/nvm.sh" ]; then
+  . "$NVM_DIR/nvm.sh"
+fi
 command -v rbenv > /dev/null && eval "$(rbenv init - bash)"
 command -v pyenv > /dev/null && eval "$(pyenv init - bash)"
