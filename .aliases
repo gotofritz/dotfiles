@@ -102,7 +102,7 @@ alias gsta='git stash apply'
 alias gstd='git stash drop'
 alias gstl='git stash list'
 alias gstp='git stash pop'
-alias gsts='git stash save'
+alias gsts='git stash push --message'
 alias gstc='git stash clear'
 alias gsqb='GIT_SEQUENCE_EDITOR="sed -i -e ''1!s/pick/fixup/''" git rebase -i $(git merge-base HEAD main)'
 alias gv="gh pr view --web"
