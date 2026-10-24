@@ -142,16 +142,6 @@ function gz() {
 	printf "gzip: %d bytes (%2.2f%%)\n" "$gzipsize" "$ratio"
 }
 
-# Syntax-highlight JSON strings or files
-# Usage: `json '{"foo":42}'` or `echo '{"foo":42}' | json`
-function json() {
-	if [ -t 0 ]; then # argument
-		python3 -m json.tool <<< "$*" | pygmentize -l javascript
-	else # pipe
-		python3 -m json.tool | pygmentize -l javascript
-	fi
-}
-
 # Manually remove a downloaded app or file from the quarantine
 function unquarantine() {
 	for attribute in com.apple.metadata:kMDItemDownloadedDate com.apple.metadata:kMDItemWhereFroms com.apple.quarantine; do
