@@ -55,6 +55,12 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 # Disable smart dashes as they’re annoying when typing code
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
+# Disable Siri, “Hey Siri”, and its menu bar icon (may need a logout to apply)
+defaults write com.apple.assistant.support "Assistant Enabled" -bool false
+defaults write com.apple.Siri StatusMenuVisible -bool false
+defaults write com.apple.Siri UserHasDeclinedEnable -bool true
+defaults write com.apple.Siri VoiceTriggerUserEnabled -bool false
+
 ###############################################################################
 # Trackpad, mouse, keyboard, Bluetooth accessories, and input                 #
 ###############################################################################
@@ -69,6 +75,40 @@ defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int
 
 # Disable auto-correct
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+
+# Disable dictionary lookup: force click and three-finger tap gestures…
+defaults write NSGlobalDomain com.apple.trackpad.forceClick -bool false
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerTapGesture -int 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerTapGesture -int 0
+# …and the ⌃⌘D “Look up in Dictionary” shortcut (symbolic hotkey 70)
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 \
+  '<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>100</integer><integer>2</integer><integer>1310720</integer></array><key>type</key><string>standard</string></dict></dict>'
+/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+
+# Map Caps Lock to Escape on all keyboards. hidutil applies it now; the
+# LaunchAgent re-applies it at login, since hidutil mappings don’t survive a reboot
+CAPS_TO_ESC='{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x700000029}]}'
+hidutil property --set "$CAPS_TO_ESC" > /dev/null
+mkdir -p ~/Library/LaunchAgents
+cat > ~/Library/LaunchAgents/com.gotofritz.capslock-to-escape.plist <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.gotofritz.capslock-to-escape</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/hidutil</string>
+    <string>property</string>
+    <string>--set</string>
+    <string>$CAPS_TO_ESC</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+</dict>
+</plist>
+PLIST
 
 ###############################################################################
 # Screen                                                                      #
@@ -191,6 +231,12 @@ defaults write com.apple.dock autohide-time-modifier -float 0
 # Make Dock icons of hidden applications translucent
 defaults write com.apple.dock showhidden -bool true
 
+# Disable all hot corners (1 = no action)
+for corner in tl tr bl br; do
+  defaults write com.apple.dock "wvous-$corner-corner" -int 1
+  defaults write com.apple.dock "wvous-$corner-modifier" -int 0
+done
+
 
 ###############################################################################
 # Time Machine                                                                #
@@ -217,3 +263,9 @@ defaults write com.apple.Accessibility KeyRepeatEnabled -bool false
 # Set a blazingly fast keyboard repeat rate
 defaults write NSGlobalDomain KeyRepeat -int 2
 defaults write NSGlobalDomain InitialKeyRepeat -int 15
+
+###############################################################################
+# Restart affected apps                                                       #
+###############################################################################
+
+killall Dock SystemUIServer cfprefsd > /dev/null 2>&1
