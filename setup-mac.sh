@@ -85,30 +85,19 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 \
   '<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>100</integer><integer>2</integer><integer>1310720</integer></array><key>type</key><string>standard</string></dict></dict>'
 /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
 
-# Map Caps Lock to Escape on all keyboards. hidutil applies it now; the
-# LaunchAgent re-applies it at login, since hidutil mappings don’t survive a reboot
-CAPS_TO_ESC='{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x700000029}]}'
-hidutil property --set "$CAPS_TO_ESC" > /dev/null
-mkdir -p ~/Library/LaunchAgents
-cat > ~/Library/LaunchAgents/com.gotofritz.capslock-to-escape.plist <<PLIST
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>Label</key>
-  <string>com.gotofritz.capslock-to-escape</string>
-  <key>ProgramArguments</key>
-  <array>
-    <string>/usr/bin/hidutil</string>
-    <string>property</string>
-    <string>--set</string>
-    <string>$CAPS_TO_ESC</string>
-  </array>
-  <key>RunAtLoad</key>
-  <true/>
-</dict>
-</plist>
-PLIST
+# Map Caps Lock to Escape, the same way System Settings → Keyboard → Modifier
+# Keys does: one setting per keyboard, so only keyboards connected now get it.
+# Rerun after plugging in a new keyboard. Applies fully after logging back in;
+# hidutil applies it to the current session straight away.
+hidutil list --matching '{"PrimaryUsagePage":1,"PrimaryUsage":6}' |
+  awk '/^Services:/ {s=1; next} /^Devices:/ {s=0} s && $1 ~ /^0x/ {print $1, $2}' |
+  sort -u |
+  while read -r vendor product; do
+    defaults -currentHost write NSGlobalDomain \
+      "com.apple.keyboard.modifiermapping.$((vendor))-$((product))-0" -array \
+      '<dict><key>HIDKeyboardModifierMappingSrc</key><integer>30064771129</integer><key>HIDKeyboardModifierMappingDst</key><integer>30064771113</integer></dict>'
+  done
+hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x700000029}]}' > /dev/null
 
 ###############################################################################
 # Screen                                                                      #
