@@ -217,9 +217,10 @@ function newbranch() {
 }
 
 # Convert string to URL-friendly slug
-# Usage: slugify "Hello World! Foo" → hello-world-foo
+# Usage: slugify "Hello World! Foo" → hello-world-foo (also copied to clipboard)
 function slugify() {
-	python3 -c "
+	local slug
+	slug=$(python3 -c "
 import unicodedata, re, sys
 text = ' '.join(sys.argv[1:])
 text = unicodedata.normalize('NFD', text)
@@ -228,7 +229,9 @@ text = text.lower()
 text = re.sub(r'[^a-z0-9]+', '-', text)
 text = text.strip('-')
 print(text)
-" "$@"
+" "$@") || return
+	printf '%s' "$slug" | pbcopy
+	echo "$slug"
 }
 
 function branch_bump {
