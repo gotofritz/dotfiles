@@ -182,13 +182,12 @@ def candidates(path: str) -> list[str]:
     return sorted(found, key=lambda s: (len(s), s))
 
 
-def existing_aliases() -> tuple[dict[str, str], dict[str, str]]:
-    """Return existing directory -> alias mappings and preserve their lines."""
+def existing_aliases() -> dict[str, str]:
+    """Return existing directory -> alias mappings."""
     mappings: dict[str, str] = {}
-    lines: dict[str, str] = {}
 
     if not OUTPUT.is_file():
-        return mappings, lines
+        return mappings
 
     for line in OUTPUT.read_text(errors="replace").splitlines():
         if not (match := ALIAS_LINE.match(line)):
@@ -209,9 +208,8 @@ def existing_aliases() -> tuple[dict[str, str], dict[str, str]]:
                 continue
             path = os.path.normpath(os.path.abspath(path))
             mappings[path] = name
-            lines[path] = line
 
-    return mappings, lines
+    return mappings
 
 
 def iter_ranked(visits: Counter[str], skip: set[str]) -> Iterator[tuple[str, int]]:
@@ -273,41 +271,40 @@ def print_report(
         print(f"{status:<9}{name:<{width}}  {count:>4} visits  {path}")
 
 
-def write_aliases(
-    new: dict[str, str], existing: dict[str, str], lines: dict[str, str]
-) -> None:
+# gohelp [pattern]: with no pattern, print every alias below the function;
+# with a pattern, print only aliases whose target path contains it (ignoring case).
+GOHELP = r"""gohelp() {
+    awk -v p="${1:-}" '
+        found && (p == "" || index(tolower(substr($0, index($0, "cd -- "))), tolower(p)))
+        /^}$/ { found = 1 }
+    ' "$HOME/.folder_aliases" | grep -v '^$'
+}"""
+
+
+def alias_line(name: str, path: str) -> str:
+    command = shlex.quote(f"cd -- {shlex.quote(path)}")
+    return f"alias {name}={command}"
+
+
+def write_aliases(new: dict[str, str], existing: dict[str, str]) -> None:
     out = [
         "# Generated automatically by gen_folder_aliases.py",
         "# Existing directory aliases are kept stable.",
+        "",
+        GOHELP,
         "",
         "alias goh='cd -- \"$HOME\"'",
         "",
     ]
 
-    # Preserve old alias lines exactly, including their original comments.
-    out.extend(lines[path] for path in existing)
+    # Existing aliases keep their names; lines are rewritten without old comments.
+    out.extend(alias_line(name, path) for path, name in existing.items())
     if existing:
         out.append("")
 
     # Add aliases only for newly discovered directories.
-    for path, name in new.items():
-        command = shlex.quote(f"cd -- {shlex.quote(path)}")
-        out.append(f"alias {name}={command}")
-
-    # gohelp [pattern]: list all folder aliases, or only those matching pattern
-    out.extend(
-        [
-            "",
-            "gohelp() {",
-            '    if [[ -n "${1:-}" ]]; then',
-            '        grep \'^alias go\' "$HOME/.folder_aliases" | grep -i -- "$1"',
-            "    else",
-            '        cat "$HOME/.folder_aliases"',
-            "    fi",
-            "}",
-            "",
-        ]
-    )
+    out.extend(alias_line(name, path) for path, name in new.items())
+    out.append("")
     OUTPUT.write_text("\n".join(out))
 
 
@@ -336,14 +333,14 @@ def main() -> None:
         return
 
     visits = count_visits(HISTORY)
-    existing, lines = existing_aliases()
+    existing = existing_aliases()
     ranked = list(iter_ranked(visits, skip=set(existing)))
     new = assign_aliases(existing, ranked, args.min_visits)
 
     print_report(existing, new, ranked, visits, args.min_visits)
 
     if not args.dry_run:
-        write_aliases(new, existing, lines)
+        write_aliases(new, existing)
         print(f"\nWrote {OUTPUT} ({len(existing)} kept, {len(new)} new)")
 
 
