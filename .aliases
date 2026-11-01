@@ -1,3 +1,6 @@
+# Start clean: drop any aliases left over from a previous load
+unalias -a
+
 # Easier navigation: .., ..., ...., ....., ~ and -
 alias ..="cd .."
 alias ...="cd ../.."
