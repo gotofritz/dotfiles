@@ -294,7 +294,20 @@ def write_aliases(
         command = shlex.quote(f"cd -- {shlex.quote(path)}")
         out.append(f"alias {name}={command}")
 
-    out.extend(["", "gohelp() {", '    cat "$HOME/.folder_aliases"', "}", ""])
+    # gohelp [pattern]: list all folder aliases, or only those matching pattern
+    out.extend(
+        [
+            "",
+            "gohelp() {",
+            '    if [[ -n "${1:-}" ]]; then',
+            '        grep \'^alias go\' "$HOME/.folder_aliases" | grep -i -- "$1"',
+            "    else",
+            '        cat "$HOME/.folder_aliases"',
+            "    fi",
+            "}",
+            "",
+        ]
+    )
     OUTPUT.write_text("\n".join(out))
 
 
