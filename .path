@@ -17,11 +17,19 @@ path_prepend() {
   esac
 }
 
+# To add a folder to PATH, add a line below (and above `export PATH`):
+#   path_prepend "$HOME/some/folder/bin"
+# Missing folders are skipped and duplicates are ignored.
+# Each line goes in FRONT of the ones above it, so put the folders that
+# should win (be searched first) further down.
+
 # GNU make (macOS ships 3.81 from 2006)
 [ -n "$HOMEBREW_PREFIX" ] && path_prepend "$HOMEBREW_PREFIX/opt/make/libexec/gnubin"
 export PNPM_HOME="$HOME/Library/pnpm"
+
 path_prepend "$PNPM_HOME"
 path_prepend "$HOME/work/flutter/bin"
+path_prepend "$HOME/.opencode/bin"
 # Your own scripts, and tools installed by uv / pipx, win over everything else
 path_prepend "$HOME/.local/bin"
 path_prepend "$HOME/bin"
