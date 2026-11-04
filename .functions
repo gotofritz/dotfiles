@@ -183,6 +183,22 @@ function winname {
 	echo -ne "\033]0;$1\007"
 }
 
+# renames the currently focused herdr workspace
+# Usage: herdrname NAME
+function herdrname {
+	if [ $# -eq 0 ]; then
+		echo "Usage: herdrname NAME" >&2
+		return 1
+	fi
+	local id
+	id=$(herdr workspace list | jq -r '.result.workspaces[] | select(.focused == true) | .workspace_id') || return
+	if [ -z "$id" ]; then
+		echo "herdrname: no focused workspace found" >&2
+		return 1
+	fi
+	herdr workspace rename "$id" "$*"
+}
+
 # opens a blank browser session
 function ff {
 	DIR="$HOME/.cache"
