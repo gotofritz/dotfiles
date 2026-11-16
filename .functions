@@ -40,18 +40,20 @@ function gwa() {
 
 # git worktree clean — removes all worktrees except main, then cd into main
 function gwc() {
-	local main_path
+	local main_path current reply
+	# worktree in a folder named main (may have another branch checked out); else worktree with branch main
+	local awk_find='/^worktree / { wt=$2; if (wt ~ /\/main$/) { print wt; found=1; exit } } /^branch refs\/heads\/main$/ && !cand { cand=wt } END { if (!found && cand) print cand }'
 
 	# Inside any worktree: git works directly
 	if git rev-parse --git-dir &>/dev/null; then
 		main_path=$(git worktree list --porcelain \
-			| awk '/^worktree / { wt=$2 } /^branch refs\/heads\/main$/ { print wt; exit }')
+			| awk "$awk_find")
 	fi
 
 	# Fallback: called from parent dir with main/ subdir
 	if [[ -z "$main_path" ]] && [[ -d main ]]; then
 		main_path=$(git -C main worktree list --porcelain \
-			| awk '/^worktree / { wt=$2 } /^branch refs\/heads\/main$/ { print wt; exit }')
+			| awk "$awk_find")
 	fi
 
 	if [[ -z "$main_path" ]]; then
@@ -59,11 +61,21 @@ function gwc() {
 		return 1
 	fi
 
+	current=$(git -C "$main_path" symbolic-ref --short -q HEAD)
+	if [[ "$current" != "main" ]] && [[ -n "$(git -C "$main_path" status --porcelain)" ]]; then
+		read -r -p "gwc: '$main_path' has uncommitted changes on '${current:-detached HEAD}'. Discard them? [y/N] " reply
+		[[ "$reply" =~ ^[Yy]$ ]] || return 1
+	fi
+
 	git -C "$main_path" worktree list --porcelain \
 		| awk -v m="$main_path" '/^worktree / && $2 != m { print $2 }' \
 		| xargs -I{} git -C "$main_path" worktree remove --force {}
 
 	git -C "$main_path" worktree prune
+
+	if [[ "$current" != "main" ]]; then
+		git -C "$main_path" checkout -f main && git -C "$main_path" clean -fd || return 1
+	fi
 	cd "$main_path"
 }
 
